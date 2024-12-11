@@ -1,45 +1,69 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { View, Text } from 'react-native'
+import React from 'react'
+import { Tabs, useSegments } from 'expo-router'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons'
+import Colors from '@/constants/Colors'
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const TabsLayout = () => {
+  const segments=useSegments()
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
+  
+    <Tabs>
+      <Tabs.Screen 
+      name="updates"
+      options={{
+        title:'Updates',
+        tabBarIcon:({size,color})=>(
+          <MaterialIcons name="update" size={size} color={color}/>
+        )
+      }}
       />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
+        <Tabs.Screen
+          name="calls"
+          options={{
+            title: 'Calls',
+            tabBarIcon: ({ size, color }) => (
+              <MaterialCommunityIcons name="phone-outline" size={size} color={color} />
+            ),
+            headerShown: false,
+          }}
+        />
+           <Tabs.Screen
+          name="communities"
+          options={{
+            title: 'Communities',
+            tabBarIcon: ({ size, color }) => (
+              <MaterialIcons name="people" size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="chats"
+          options={{
+            title: 'Chats',
+            tabBarIcon: ({ size, color }) => (
+              <Ionicons name="chatbubbles" size={size} color={color} />
+            ),
+            headerShown: false,
+            tabBarStyle: {
+              backgroundColor: Colors.background,
+              display: segments[2] === '[id]' ? 'none' : 'flex',
+            },
+          }}
+        />
+
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: 'Settings',
+            tabBarIcon: ({ size, color }) => <Ionicons name="cog" size={size} color={color} />,
+            headerShown: false,
+          }}
+        />
     </Tabs>
-  );
+   
+  )
 }
+
+export default TabsLayout
